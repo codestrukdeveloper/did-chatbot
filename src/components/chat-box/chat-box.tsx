@@ -69,6 +69,7 @@ export default function ChatBox({ send = false, introData = '',apiKey }: ChatBox
               setIsLoading(false);
               return;
             }
+            
 
             tempBotText += token;
 
