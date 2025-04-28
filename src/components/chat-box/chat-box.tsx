@@ -5,7 +5,6 @@ import Image from 'next/image';
 import ChatMessage from '../chat-messages/chat-messages';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY as string;
 
 interface Message {
   sender: 'user' | 'bot';
@@ -15,9 +14,11 @@ interface Message {
 interface ChatBoxProps {
   send?: boolean;
   introData?: string;
+  apiKey:string;
+
 }
 
-export default function ChatBox({ send = false, introData = '' }: ChatBoxProps) {
+export default function ChatBox({ send = false, introData = '',apiKey }: ChatBoxProps) {
   const initialMessages: Message[] = introData ? [{ sender: 'bot', text: introData.trim() }] : [];
 
   const [messages, setMessages] = useState<Message[]>(initialMessages);
@@ -43,7 +44,7 @@ export default function ChatBox({ send = false, introData = '' }: ChatBoxProps) 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
+          'x-api-key': apiKey,
         },
         body: JSON.stringify({ message: userMessage }),
       });
@@ -101,7 +102,6 @@ export default function ChatBox({ send = false, introData = '' }: ChatBoxProps) 
 
   return (
     <div className="flex flex-col h-full p-4 rounded-lg">
-      {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {messages.map((msg, i) => (
           <ChatMessage key={i} sender={msg.sender} text={msg.text} />
@@ -120,7 +120,6 @@ export default function ChatBox({ send = false, introData = '' }: ChatBoxProps) 
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Box */}
       <div className="border rounded-lg px-4 py-2 flex items-center bg-white">
         <input
           type="text"
